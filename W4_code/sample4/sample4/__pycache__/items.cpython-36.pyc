@@ -1,0 +1,2 @@
+3
+™Z¼[9  ?               @   s   d dl Z G dd? de j?ZdS )?    Nc               @   s,   e Zd Zej? Zej? Zej? Zej? ZdS )?TutsplusItemN)	?__name__?__module__?__qualname__?scrapy?Field?title?author?category?date? r   r   ?C:\Users\User\Scrapy\sample4\items.pyr      s   r   )r   ?Itemr   r   r   r   r   ?<module>   s   
