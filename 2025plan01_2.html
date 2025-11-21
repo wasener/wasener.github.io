@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>螺絲上漆系統化管控計畫</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Brilliant Blues (#003F63, #006094, #00A1E0, #5BC5F5, #A6DFF9) -->
+    <!-- Application Structure Plan: 採用單頁滾動式資訊圖 (Infographic) 敘事流程。結構將遵循「問題 → 解決方案 → 執行過程 → 預期影響 → 關鍵數據」的邏輯。1. (Hook) 挑戰：視覺化呈現3大核心問題。2. (Solution) 解決方案：展示9個月的3階段計畫概覽 (將用HTML/CSS重製流程圖)。3. (Process) 深入探討：分為三區，詳述每個階段的任務。4. (Impact) 預期成效：圖示化4大效益。5. (Data) 關鍵成果：使用「大數字」展示量化KPI。6. (Timeline) 計畫時程：使用Chart.js重製甘特圖。此結構旨在將靜態報告轉化為一個引人入勝的視覺故事，引導使用者從問題點一路探索至解決方案的價值。 -->
+    <!-- Visualization & Content Choices: 1. 核心問題 (Info) -> 告知 (Goal) -> 3張資訊卡片 + Unicode圖示 (Viz) -> (HTML/CSS). 2. 三階段流程 (Info) -> 組織 (Goal) -> HTML/CSS流程圖 (Viz) -> (HTML/Tailwind, NO MERMAID). 3. 階段詳情 (Info) -> 組織 (Goal) -> 3張卡片 + 列表 (Viz) -> (HTML/CSS). 4. 預期效益 (Info) -> 告知 (Goal) -> 4張資訊卡片 + Unicode圖示 (Viz) -> (HTML/CSS). 5. 量化成果 (Info) -> 告知 (Goal) -> "大數字" 統計 (Viz) -> (HTML/CSS). 6. 計畫時程 (Info) -> 變化/時程 (Goal) -> Chart.js 水平浮動長條圖 (Gantt) (Viz) -> (Chart.js/Canvas, NO MERMAID). 所有圖表皆包含說明文字。 -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 450px;
+            max-height: 450px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+                max-height: 500px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50" style="color: #006094;">
+
+    <div class="container mx-auto max-w-6xl p-6 md:p-12">
+
+        <!-- Header -->
+        <header class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: #003F63;">
+                螺絲扣件外觀上漆
+                <span style="color: #00A1E0;">系統化管控技術</span>
+            </h1>
+            <p class="text-xl md:text-2xl" style="color: #006094;">
+                將傳統經驗轉化為可量化的科學參數，奠定工業 4.0 基礎
+            </p>
+        </header>
+
+        <!-- Section 1: The Challenge -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: #003F63;">當前面臨的核心挑戰</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto mb-12">
+                傳統螺絲上漆製程過度依賴「匠人式」經驗，缺乏數據標準，導致品質難以量化與複製，並引發三大核心問題：
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4" style="border-color: #00A1E0;">
+                    <div class="text-6xl mb-4">🎨</div>
+                    <h3 class="text-2xl font-semibold mb-3" style="color: #003F63;">批次色差不穩</h3>
+                    <p>缺乏科學配方管理，不同批次或人員易產生肉眼可見的色差，導致客戶拒收。</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4" style="border-color: #00A1E0;">
+                    <div class="text-6xl mb-4">💧<span class="mx-2">→</span>💨</div>
+                    <h3 class="text-2xl font-semibold mb-3" style="color: #003F63;">乾濕膜差異無法預測</h3>
+                    <p>濕漆與乾膜顏色存在物理差異，需等待乾燥才能確認，錯誤時已造成大量重工。</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg border-t-4" style="border-color: #00A1E0;">
+                    <div class="text-6xl mb-4">🔍</div>
+                    <h3 class="text-2xl font-semibold mb-3" style="color: #003F63;">缺乏數位化製程履歷</h3>
+                    <p>無法即時監控，不良品發生時難以追溯根本原因，導致問題重複發生。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: The Solution Flowchart -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: #003F63;">我們的解決方案：9 個月三階段計畫</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto mb-12">
+                我們提出一個為期 9 個月的系統開發計畫，建立從「原料」到「成品」的完整品質預測迴圈。
+            </p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-4">
+                <div class="w-full md:w-1/3 bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div class="text-sm font-bold" style="color: #00A1E0;">階段一 (1-3月)</div>
+                    <h3 class="text-xl font-semibold" style="color: #003F63;">原料識別</h3>
+                    <p class="text-sm">建立基礎參數資料庫</p>
+                </div>
+                <div class="text-4xl font-light" style="color: #00A1E0;">→</div>
+                <div class="w-full md:w-1/3 bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div class="text-sm font-bold" style="color: #00A1E0;">階段二 (4-6月)</div>
+                    <h3 class="text-xl font-semibold" style="color: #003F63;">扣件濕抹管控</h3>
+                    <p class="text-sm">建立即時監控與調控模型</p>
+                </div>
+                <div class="text-4xl font-light" style="color: #00A1E0;">→</div>
+                <div class="w-full md:w-1/3 bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div class="text-sm font-bold" style="color: #00A1E0;">階段三 (7-9月)</div>
+                    <h3 class="text-xl font-semibold" style="color: #003F63;">扣件乾抹預測</h3>
+                    <p class="text-sm">建立乾濕膜轉換預測模型</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Process Details -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: #003F63;">計畫執行細節</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto mb-12">
+                每個階段都有明確的執行重點，確保研究的嚴謹性與數據的準確性。
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg" style="background-color: #F0F9FF;">
+                    <h3 class="text-2xl font-semibold mb-4" style="color: #003F63;">階段一：原料識別</h3>
+                    <p class="mb-4">此階段為計畫基石，重點在於「定義問題」與「標準化輸入」。</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>蒐集漆料物理化學特性</li>
+                        <li>導入實驗設計法 (DOE)</li>
+                        <li>定義關鍵調控參數 (KPIV)</li>
+                        <li>導入色差計與黏度計 (MSA)</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg" style="background-color: #F0F9FF;">
+                    <h3 class="text-2xl font-semibold mb-4" style="color: #003F63;">階段二：扣件濕抹管控</h3>
+                    <p class="mb-4">著重於「製程中的即時監控」，解決「憑感覺調漆」的問題。</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>建立濕抹標準作業流程 (SOP)</li>
+                        <li>分析黏度與濕膜色差關聯</li>
+                        <li>建立 $Y_{wet} = f(Viscosity, ...)$ 調控模型</li>
+                        <li>實現濕膜階段即時判斷</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg" style="background-color: #F0F9FF;">
+                    <h3 class="text-2xl font-semibold mb-4" style="color: #003F63;">階段三：扣件乾抹管控</h3>
+                    <p class="mb-4">完成「預測與驗證」，建立從濕膜數據精準預測乾膜結果的能力。</p>
+                    <ul class="list-disc list-inside space-y-2">
+                        <li>研究乾濕膜色差轉移函數</li>
+                        <li>建立 $Y_{dry} = f(Y_{wet}, ...)$ 預測模型</li>
+                        <li>整合全製程 SOP 並定案</li>
+                        <li>小批量試產 (Pilot Run) 驗證模型</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: The Impact -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: #003F63;">預期成效與轉型</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto mb-12">
+                本計畫將帶來具體的技術升級與經濟效益，實現從「經驗」到「數據」的轉型。
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div class="text-6xl mb-3">✅</div>
+                    <h3 class="text-xl font-semibold" style="color: #003F63;">品質一致性提升</h3>
+                    <p class="text-sm">消除人為判斷誤差，確保批次間品質高度穩定。</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div class="text-6xl mb-3">💰</div>
+                    <h3 class="text-xl font-semibold" style="color: #003F63;">降低重工成本</h3>
+                    <p class="text-sm">濕抹階段即時修正異常，大幅減少重工與報廢。</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div class="text-6xl mb-3">🧠</div>
+                    <h3 class="text-xl font-semibold" style="color: #003F63;">技術經驗數位化</h3>
+                    <p class="text-sm">將隱性知識轉化為SOP與模型，降低人員流動衝擊。</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                    <div class="text-6xl mb-3">🤖</div>
+                    <h3 class="text-xl font-semibold" style="color: #003F63;">奠定智慧製造基礎</h3>
+                    <p class="text-sm">數據庫與模型可作為導入AI自動化噴塗的基礎。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: The Data (KPIs) -->
+        <section class="mb-20">
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: #003F63;">關鍵量化成果</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto mb-12">
+                我們設定了清晰的量化指標 (KPI) 來驗收計畫成效，確保研發成果能具體落地。
+            </p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center bg-white p-8 rounded-xl shadow-xl border-b-8" style="border-color: #5BC5F5;">
+                    <div class="text-5xl md:text-6xl font-bold" style="color: #003F63;">&lt; 1.0</div>
+                    <div class="text-lg mt-2 font-semibold">色差值 $\Delta E$</div>
+                    <p class="text-sm">符合國際車廠規範</p>
+                </div>
+                <div class="text-center bg-white p-8 rounded-xl shadow-xl border-b-8" style="border-color: #00A1E0;">
+                    <div class="text-5xl md:text-6xl font-bold" style="color: #003F63;">&gt; 90%</div>
+                    <div class="text-lg mt-2 font-semibold">模型預測準確度</div>
+                    <p class="text-sm">乾膜結果精準預測</p>
+                </div>
+                <div class="text-center bg-white p-8 rounded-xl shadow-xl border-b-8" style="border-color: #006094;">
+                    <div class="text-5xl md:text-6xl font-bold" style="color: #003F63;">&gt; 30%</div>
+                    <div class="text-lg mt-2 font-semibold">不良率降低</div>
+                    <p class="text-sm">提升良率與產能</p>
+                </div>
+                <div class="text-center bg-white p-8 rounded-xl shadow-xl border-b-8" style="border-color: #003F63;">
+                    <div class="text-5xl md:text-6xl font-bold" style="color: #003F63;">&gt; 20%</div>
+                    <div class="text-lg mt-2 font-semibold">效率提升</div>
+                    <p class="text-sm">縮短調色與換線時間</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: The Timeline -->
+        <section>
+            <h2 class="text-3xl font-bold text-center mb-4" style="color: #003F63;">計畫執行時程 (Gantt Chart)</h2>
+            <p class="text-lg text-center max-w-3xl mx-auto mb-12">
+                總期程為 9 個月，以下為各項任務的詳細時程規劃，以確保專案按時推進。
+            </p>
+            <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                <div class="chart-container">
+                    <canvas id="ganttChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('ganttChart').getContext('2d');
+            
+            const p1Color = 'rgba(91, 197, 245, 0.7)';
+            const p1Border = 'rgba(91, 197, 245, 1)';
+            const p2Color = 'rgba(0, 161, 224, 0.7)';
+            const p2Border = 'rgba(0, 161, 224, 1)';
+            const p3Color = 'rgba(0, 96, 148, 0.7)';
+            const p3Border = 'rgba(0, 96, 148, 1)';
+
+            const chartData = {
+                labels: [
+                    'P1: 文獻回顧與現況分析', 
+                    'P1: DOE實驗設計與規劃', 
+                    'P1: 定義關鍵調控參數(KPIV)', 
+                    'P1: 儀器導入校正與MSA分析', 
+                    'P2: 制定濕抹SOP初版', 
+                    'P2: 現場黏度與色差數據採集', 
+                    'P2: 建立濕抹調控回歸模型', 
+                    'P3: 制定乾抹SOP初版', 
+                    'P3: 乾濕膜色差關聯性分析', 
+                    'P3: 全域調控模型驗證與優化', 
+                    'P3: 結案報告撰寫與成果發表'
+                ],
+                datasets: [{
+                    label: '任務時程',
+                    data: [
+                        [0, 1],
+                        [1, 2],
+                        [2, 3],
+                        [0.5, 2.5],
+                        [3, 3.7],
+                        [3.7, 5.4],
+                        [5.4, 6.1],
+                        [6.1, 6.8],
+                        [6.8, 8.1],
+                        [8.1, 9.1],
+                        [9.1, 9.6]
+                    ],
+                    backgroundColor: [
+                        p1Color, p1Color, p1Color, p1Color,
+                        p2Color, p2Color, p2Color,
+                        p3Color, p3Color, p3Color, p3Color
+                    ],
+                    borderColor: [
+                        p1Border, p1Border, p1Border, p1Border,
+                        p2Border, p2Border, p2Border,
+                        p3Border, p3Border, p3Border, p3Border
+                    ],
+                    borderWidth: 1,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8
+                }]
+            };
+
+            const chartConfig = {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                },
+                                label: function(context) {
+                                    if (context.parsed.x !== null) {
+                                        return ` 第 ${context.parsed.x[0]} - ${context.parsed.x[1]} 個月`;
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 10,
+                            title: {
+                                display: true,
+                                text: '計畫月份 (Month)',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                color: '#006094'
+                            },
+                            ticks: {
+                                stepSize: 1,
+                                color: '#006094'
+                            },
+                            grid: {
+                                color: '#A6DFF9'
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: '#003F63',
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            };
+
+            new Chart(ctx, chartConfig);
+        });
+    </script>
+</body>
+</html>
