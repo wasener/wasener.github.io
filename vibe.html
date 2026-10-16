@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>登入代號查詢</title>
+<style>
+  :root {
+    --bg: #f3f1ec;
+    --card: #fffdf9;
+    --ink: #1c1b18;
+    --muted: #6a645a;
+    --line: #e0dbd0;
+    --accent: #1f5e4b;
+    --accent-ink: #ffffff;
+    --accent-soft: #e2eee8;
+    --warn: #9a3412;
+    --warn-soft: #fcece2;
+    --mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #13120f;
+      --card: #1c1b17;
+      --ink: #eeeae0;
+      --muted: #a29a8a;
+      --line: #34312a;
+      --accent: #63c19b;
+      --accent-ink: #0e1a15;
+      --accent-soft: #1d2c26;
+      --warn: #f2a37c;
+      --warn-soft: #3a2219;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  main { width: 100%; max-width: 440px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+  h1 { font-size: 1.35rem; margin: 0 0 6px; }
+  .lead { margin: 0 0 22px; color: var(--muted); font-size: .95rem; }
+  label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: 6px; }
+  .row { display: flex; gap: 8px; }
+  input[type="email"] {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    padding: 11px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink);
+  }
+  input[type="email"]:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+  button {
+    font: inherit;
+    font-weight: 600;
+    border: 0;
+    border-radius: 10px;
+    padding: 11px 18px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  button:disabled { opacity: .55; cursor: default; }
+  button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 8px 14px; }
+  .msg {
+    margin: 18px 0 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: .92rem;
+    background: var(--warn-soft);
+    color: var(--warn);
+  }
+  .result { margin-top: 22px; padding-top: 20px; border-top: 1px dashed var(--line); }
+  .label { font-size: .85rem; color: var(--muted); margin: 0; }
+  .label + .label, .block + .label { margin-top: 16px; }
+  .tag {
+    display: inline-block;
+    margin-left: 6px;
+    font-size: .75rem;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    vertical-align: 1px;
+  }
+  .code {
+    font-family: var(--mono);
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--accent);
+    margin: 2px 0 0;
+  }
+  .token-box { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+  .token {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--mono);
+    font-size: .9rem;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg);
+    word-break: break-all;
+  }
+  .note { font-size: .8rem; color: var(--muted); margin: 8px 0 0; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>登入代號查詢</h1>
+    <p class="lead">輸入您的 Gmail，取得專屬的登入代號與權杖。同一個 Gmail 不論查幾次，拿到的都是同一組代號。</p>
+
+    <form id="form" novalidate>
+      <label for="email">Gmail 地址</label>
+      <div class="row">
+        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="name@gmail.com" required>
+        <button id="submit" type="submit">查詢</button>
+      </div>
+    </form>
+
+    <p id="msg" class="msg" role="alert" hidden></p>
+
+    <section id="result" class="result" aria-live="polite" hidden>
+      <p class="label">您的登入代號是<span id="status" class="tag"></span></p>
+      <div id="code" class="code block"></div>
+
+      <div id="tokenWrap">
+        <p class="label" style="margin-top:16px">您的權杖是</p>
+        <div class="token-box">
+          <code id="token" class="token"></code>
+          <button id="copy" type="button" class="ghost">複製</button>
+        </div>
+        <p class="note">請自行保存，不要轉傳給其他人。</p>
+      </div>
+
+      <p id="pending" class="msg" hidden>您的權杖還沒設定好，請洽授課老師。</p>
+    </section>
+  </div>
+</main>
+
+<script>
+  const CONFIG = {
+    // 部署 Apps Script 網頁應用程式後，把結尾是 /exec 的網址貼在這裡
+    API_URL: 'https://script.google.com/macros/s/AKfycby21uFX-4nNymJiAf9RCsyAEmmRwEI9wVb6ng8RwNgNk3p5CHCXSC9xF7yM3KQGMn-R/exec',
+    GMAIL_ONLY: true,
+    TIMEOUT_MS: 20000
+  };
+
+  const $ = (s) => document.querySelector(s);
+  const form = $('#form');
+  const emailEl = $('#email');
+  const submitBtn = $('#submit');
+  const msgEl = $('#msg');
+  const resultEl = $('#result');
+  const copyBtn = $('#copy');
+
+  function showMsg(text) {
+    msgEl.textContent = text || '';
+    msgEl.hidden = !text;
+  }
+
+  function isValidEmail(v) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return false;
+    if (!CONFIG.GMAIL_ONLY) return true;
+    const domain = v.split('@')[1];
+    return domain === 'gmail.com' || domain === 'googlemail.com';
+  }
+
+  function render(data) {
+    $('#code').textContent = data.code;
+    $('#status').textContent = data.isNew ? '新配發' : '先前已配發';
+    if (data.token) {
+      $('#token').textContent = data.token;
+      $('#tokenWrap').hidden = false;
+      $('#pending').hidden = true;
+    } else {
+      $('#token').textContent = '';
+      $('#tokenWrap').hidden = true;
+      $('#pending').hidden = false;
+    }
+    resultEl.hidden = false;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = emailEl.value.trim().toLowerCase();
+    showMsg('');
+    resultEl.hidden = true;
+
+    if (!isValidEmail(email)) {
+      showMsg('請輸入完整的 Gmail 地址，例如 name@gmail.com。');
+      emailEl.focus();
+      return;
+    }
+    if (!/^https:\/\/script\.google\.com\//.test(CONFIG.API_URL)) {
+      showMsg('查詢服務尚未設定完成，請通知授課老師。');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = '查詢中…';
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), CONFIG.TIMEOUT_MS);
+
+    try {
+      // 不設定 Content-Type，瀏覽器會以 text/plain 送出，Apps Script 才能直接接收
+      const res = await fetch(CONFIG.API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+        signal: controller.signal
+      });
+      const data = await res.json();
+      if (!data.ok) {
+        showMsg(data.error || '查詢失敗，請稍後再試。');
+        return;
+      }
+      render(data);
+    } catch (err) {
+      showMsg(err.name === 'AbortError'
+        ? '連線逾時，請稍後再試一次。'
+        : '無法連線到查詢服務，請確認網路後再試一次。');
+    } finally {
+      clearTimeout(timer);
+      submitBtn.disabled = false;
+      submitBtn.textContent = '查詢';
+    }
+  });
+
+  emailEl.addEventListener('input', () => {
+    if (!resultEl.hidden || !msgEl.hidden) {
+      resultEl.hidden = true;
+      showMsg('');
+    }
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const text = $('#token').textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      const range = document.createRange();
+      range.selectNodeContents($('#token'));
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand('copy');
+      sel.removeAllRanges();
+    }
+    copyBtn.textContent = '已複製';
+    setTimeout(() => { copyBtn.textContent = '複製'; }, 1500);
+  });
+</script>
+</body>
+</html>
